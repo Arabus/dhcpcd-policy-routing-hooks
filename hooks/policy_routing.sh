@@ -39,9 +39,11 @@ _add_policy_routing(){
                         _add_or_update_policy ${prefix_addr} ${router_address}
                         j=$(($j + 1))
                 done
-
-                [ -z "${prefix}" ] && break
                 i=$(($i + 1))
+                j=1
+
+                eval prefix=\$nd${i}_prefix_information${j}_prefix
+                [ -z "${prefix}" ] && break
         done
 }
 _remove_policy(){
@@ -72,9 +74,11 @@ _remove_policy_routing(){
                         _remove_policy ${prefix_addr}
                         j=$(($j + 1))
                 done
-
-                [ -z "${prefix}" ] && break
                 i=$(($i + 1))
+                j=1
+
+                eval prefix=\$nd${i}_prefix_information${j}_prefix
+                [ -z "${prefix}" ] && break
         done
 }
 
@@ -92,7 +96,6 @@ _stop_policy_routing(){
 
 case "$reason" in
 ROUTERADVERT)
-        set | sort >> /tmp/pdump
         _add_policy_routing
         _remove_policy_routing
         exit 0
